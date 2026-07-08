@@ -2,12 +2,13 @@
 # ---------------
 # Dependency Injection utilities for FastAPI controllers.
 
+from app.db.firestore import db
+
 def get_db():
     """
-    Placeholder generator yielding the database client.
-    Will be populated during the database/Firestore integration stage.
+    Generator yielding the active database client instance.
     """
-    pass
+    yield db
 
 
 def get_current_user():
