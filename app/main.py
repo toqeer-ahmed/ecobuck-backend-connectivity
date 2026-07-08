@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
+from app.core.exceptions import register_exception_handlers
 
 app = FastAPI(
     title="EcoBuck Smart Compost Monitoring System API",
@@ -20,6 +21,10 @@ app.add_middleware(
 
 # Include baseline v1 API routers
 app.include_router(api_router)
+
+# Register custom exception handlers globally
+register_exception_handlers(app)
+
 
 
 @app.get("/health", tags=["System Health"])
