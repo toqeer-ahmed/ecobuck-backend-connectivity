@@ -1,8 +1,9 @@
 import time
-from fastapi import APIRouter, Depends, Header, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from app.schemas.telemetry import TelemetryPayload
 from app.repositories.telemetry import TelemetryRepository
 from app.repositories.device import DeviceRepository
+from app.api.deps import verify_device_token
 
 router = APIRouter()
 
@@ -10,7 +11,7 @@ router = APIRouter()
 @router.post("/telemetry", status_code=status.HTTP_202_ACCEPTED, tags=["Telemetry Ingestion"])
 async def ingest_telemetry(
     payload: TelemetryPayload,
-    x_device_token: str = Header(None, alias="X-Device-Token"),
+    x_device_token: str = Depends(verify_device_token),
     telemetry_repo: TelemetryRepository = Depends(TelemetryRepository),
     device_repo: DeviceRepository = Depends(DeviceRepository),
 ):
@@ -18,12 +19,6 @@ async def ingest_telemetry(
     Ingest a telemetry packet from the ESP32 hardware device.
     Saves to the time-series telemetry subcollection and updates the latest status cached document.
     """
-    # Placeholder auth check for local development verification (Module 6 introduces strict HMAC logic)
-    if not x_device_token:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Missing device authentication token in header.",
-        )
 
     # 1. Save time-series log
     telemetry_data = payload.model_dump()
