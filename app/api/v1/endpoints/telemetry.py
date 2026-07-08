@@ -1,9 +1,10 @@
 import time
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, BackgroundTasks
 from app.schemas.telemetry import TelemetryPayload
 from app.repositories.telemetry import TelemetryRepository
 from app.repositories.device import DeviceRepository
 from app.api.deps import verify_device_token
+from app.alert_engine.processor import evaluate_telemetry
 
 router = APIRouter()
 
@@ -11,6 +12,7 @@ router = APIRouter()
 @router.post("/telemetry", status_code=status.HTTP_202_ACCEPTED, tags=["Telemetry Ingestion"])
 async def ingest_telemetry(
     payload: TelemetryPayload,
+    background_tasks: BackgroundTasks,
     x_device_token: str = Depends(verify_device_token),
     telemetry_repo: TelemetryRepository = Depends(TelemetryRepository),
     device_repo: DeviceRepository = Depends(DeviceRepository),
@@ -38,6 +40,9 @@ async def ingest_telemetry(
     # 3. Update device document status and write cache document `/latest/status`
     device_repo.update_status(payload.device_id, payload.status)
     device_repo.update_latest_status(payload.device_id, latest_status_payload)
+
+    # 4. Trigger alert engine processing asynchronously
+    background_tasks.add_task(evaluate_telemetry, telemetry_data)
 
     return {
         "status": "success",
