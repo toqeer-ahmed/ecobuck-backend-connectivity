@@ -113,8 +113,8 @@ Our OpenAPI (Swagger) interface exposes:
 ---
 
 ## 12. GitHub Repository
-*   **Repository Name:** [Repository Name Placeholder]
-*   **Repository URL:** [Repository URL Placeholder]
+*   **Repository Name:** ecobuck-backend-connectivity
+*   **Repository URL:** https://github.com/toqeer-ahmed/ecobuck-backend-connectivity
 
 ---
 
@@ -168,6 +168,6 @@ The architecture design phase for EcoBuck's Connectivity & Backend (Assignment C
 ---
 
 ### Team Members
-*   **Backend & AI Lead:** [Team Member Placeholder]
-*   **Firmware Lead:** [Team Member Placeholder]
-*   **Mobile App Lead:** [Team Member Placeholder]
+*   **Backend & AI Lead:** Toqeer Ahmed
+*   **Firmware Lead:** Abdullah Ijaz & Waleed Tariq
+*   **Mobile App Lead:** Rabia Qaiser
